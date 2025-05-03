@@ -1,11 +1,10 @@
 package ru.hogwarts.school.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Faculty {
@@ -14,6 +13,21 @@ public class Faculty {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name, color;
+
+    @OneToMany(mappedBy = "faculty")
+    private List<Student> students;
+
+    //Геттеры и сеттеры студентов
+    public List<Student> getStudents(){
+        return students;
+    }
+
+    public void setStudents(List<Student> students){
+        this.students = students;
+    }
+
+    //Пустой конструктор для устранения ошибки в SWAGGER
+    public Faculty(){}
 
     public Faculty(Long id, String name, String color) {
         this.id = id;

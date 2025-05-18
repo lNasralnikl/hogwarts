@@ -15,13 +15,6 @@ public class SchoolApplication {
 		SpringApplication.run(SchoolApplication.class, args);
 	}
 
-	@Bean
-	public OpenAPI customOpenAPI() {
-		return new OpenAPI()
-				.info(new Info()
-						.title("Hogwarts School API")
-						.version("1.0")
-						.description("API for Hogwarts School"));
-	}
+
 
 }

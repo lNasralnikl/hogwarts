@@ -3,6 +3,7 @@ package ru.hogwarts.school.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.hogwarts.school.model.Faculty;
 import ru.hogwarts.school.model.Student;
 import ru.hogwarts.school.service.StudentService;
 
@@ -42,7 +43,7 @@ public class StudentController {
     //Изменение студента
     @PutMapping
     public ResponseEntity<Student> updateStudent(@RequestBody Student student){
-        Student updatedStudent = studentService.addStudent(student);
+        Student updatedStudent = studentService.updateStudent(student);
         return updatedStudent != null
                 ? ResponseEntity.ok(updatedStudent)
                 : ResponseEntity.badRequest().build();
@@ -63,13 +64,11 @@ public class StudentController {
         return ResponseEntity.ok(Collections.emptyList());
     }
 
-
-    /*
-    public List<Student> findByAge(@RequestParam("age") int age){
-        return studentService.findByAge(age);
+    //Поиск в диапазоне возрастов
+    @GetMapping("/by-age-between")
+    public List<Student> findByAgeBetween(@RequestParam int minAge, @RequestParam int maxAge){
+        return studentService.findByAgeBetween(minAge, maxAge);
     }
-
-     */
 
     //Поиск по id
     @GetMapping("{id}")
@@ -81,6 +80,11 @@ public class StudentController {
         return ResponseEntity.ok(student);
     }
 
+    //Получение факультета по id
+    @GetMapping("/{id}/faculty")
+    public Faculty getFacultyByStudent(@PathVariable Long id){
+        return studentService.findById(id).getFaculty();
+    }
 
 
 }

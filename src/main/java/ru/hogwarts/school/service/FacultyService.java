@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import ru.hogwarts.school.Errors.BadRequest;
 import ru.hogwarts.school.Repositories.FacultyRepository;
 import ru.hogwarts.school.model.Faculty;
+import ru.hogwarts.school.model.Student;
 
 import java.util.*;
 
@@ -18,15 +19,26 @@ public class FacultyService {
 
     //Добавление
     public Faculty addFaculty(Faculty faculty){
+        if (faculty.getId() != null){
+            throw new BadRequest("Для добавления нового факультета указать нулевой ID!");
+        }
+        return facultyRepository.save(faculty);
+    }
+
+    //Обновление факультета
+    public Faculty updateFaculty(Faculty faculty){
+        if(faculty.getId() == null){
+            throw new BadRequest("Для изменения факультета введите не нулевой ID!");
+        }
         return facultyRepository.save(faculty);
     }
 
     //Поиск по id
     public Faculty findById(Long id) {
-        if (facultyRepository.findById(id) != null) {
-            return facultyRepository.findById(id).get();
+        if (!facultyRepository.existsById(id)){
+            throw new BadRequest("Такого факультета нет!");
         }
-        throw new BadRequest("Факультет не найден");
+        return facultyRepository.findById(id).get();
     }
 
     //Удаление факультета
@@ -52,32 +64,9 @@ public class FacultyService {
         return facultyRepository.findFacultyByName(name);
     }
 
-/*
-    //Поиск по цвету
-
-    public Collection<Faculty> findByColor(String color) {
-        List<Faculty> foundedFaculties = faculties.values().stream()
-                .filter(f -> f.getColor() == color)
-                .toList();
-        if (foundedFaculties.isEmpty()) {
-            throw new BadRequest("Факультеты не найдены");
-        }
-        return foundedFaculties;
+    //Поиск по названию или цвету
+    public List<Faculty> findByNameOrColorIgnoreCase(String searchable) {
+        return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(searchable, searchable);
     }
-
-
-    //Поиск по имени
-    public List<Faculty> findByName(String name) {
-        List<Faculty> foundedFaculties = faculties.values().stream()
-                .filter(f -> f.getName().equalsIgnoreCase(name))
-                .toList();
-        if (foundedFaculties.isEmpty()) {
-            throw new BadRequest("Факультеты не найдены");
-        }
-        return foundedFaculties;
-
-    }
-
-     */
 
 }

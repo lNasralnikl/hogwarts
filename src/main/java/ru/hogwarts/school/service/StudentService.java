@@ -18,14 +18,26 @@ private final StudentRepository studentRepository;
 
     //Добавление
     public Student addStudent(Student student) {
+        if (student.getId() !=null){
+            throw new BadRequest("Для добавления нового студента укажите нулевой ID!");
+        }
+        return studentRepository.save(student);
+    }
+
+    //Обновление
+    public Student updateStudent(Student student) {
+        if (student.getId() ==null){
+            throw new BadRequest("Для обновления студента укажите не нулевой ID!");
+        }
         return studentRepository.save(student);
     }
 
     //Поиск по id
     public Student findById(Long id) {
-        if (studentRepository.findById(id) != null){
-        return studentRepository.findById(id).get();}
-        throw new BadRequest("Такого студента нет!");
+        if (!studentRepository.existsById(id)){
+            throw new BadRequest("Такого студента нет!");
+        }
+        return studentRepository.findById(id).get();
     }
 
     //Удаление студента
@@ -47,6 +59,11 @@ private final StudentRepository studentRepository;
     //Поиск по возрасту
     public List<Student> findStudentByAge(int age) {
         return studentRepository.findByAge(age);
+    }
+
+    //Поиск в диапазоне возрастов
+    public List<Student> findByAgeBetween(int minAge, int maxAge){
+        return studentRepository.findByAgeBetween(minAge, maxAge);
     }
 
 }

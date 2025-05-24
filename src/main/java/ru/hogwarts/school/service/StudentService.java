@@ -10,7 +10,7 @@ import java.util.*;
 @Service
 public class StudentService {
 
-private final StudentRepository studentRepository;
+    private final StudentRepository studentRepository;
 
     public StudentService(StudentRepository studentRepository) {
         this.studentRepository = studentRepository;
@@ -18,7 +18,7 @@ private final StudentRepository studentRepository;
 
     //Добавление
     public Student addStudent(Student student) {
-        if (student.getId() !=null){
+        if (student.getId() != null) {
             throw new BadRequest("Для добавления нового студента укажите нулевой ID!");
         }
         return studentRepository.save(student);
@@ -26,7 +26,7 @@ private final StudentRepository studentRepository;
 
     //Обновление
     public Student updateStudent(Student student) {
-        if (student.getId() ==null){
+        if (student.getId() == null) {
             throw new BadRequest("Для обновления студента укажите не нулевой ID!");
         }
         return studentRepository.save(student);
@@ -34,7 +34,7 @@ private final StudentRepository studentRepository;
 
     //Поиск по id
     public Student findById(Long id) {
-        if (!studentRepository.existsById(id)){
+        if (!studentRepository.existsById(id)) {
             throw new BadRequest("Такого студента нет!");
         }
         return studentRepository.findById(id).get();
@@ -62,8 +62,39 @@ private final StudentRepository studentRepository;
     }
 
     //Поиск в диапазоне возрастов
-    public List<Student> findByAgeBetween(int minAge, int maxAge){
+    public List<Student> findByAgeBetween(int minAge, int maxAge) {
         return studentRepository.findByAgeBetween(minAge, maxAge);
+    }
+
+    //SQL запросы
+    public Long getAllStudentsQuantity() {
+        return studentRepository.getAllStudentsQuantity();
+    }
+
+    public double getAvgAgeOfAllStudents() {
+        return studentRepository.getAvgAgeOfAllStudents();
+    }
+
+    public List<Student> getLastFiveStudents() {
+        return studentRepository.getLastFiveStudents();
+    }
+
+    //
+
+    //Заполнение базы
+    public void addStudentsForDB() {
+
+        studentRepository.deleteByNameStartingWith("Name");
+
+        for (int i = 0; i < 10; i++) {
+
+            Student student = new Student();
+            student.setAge(i + 10);
+            student.setName("Name" + i);
+            if (findStudentByName(student.getName()).isEmpty()) {
+                studentRepository.save(student);
+            }
+        }
     }
 
 }

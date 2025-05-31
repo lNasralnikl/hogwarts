@@ -1,5 +1,7 @@
 package ru.hogwarts.school.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,6 +27,8 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 @Transactional
 public class AvatarService {
 
+    private static final Logger logger = LoggerFactory.getLogger(AvatarService.class);
+
     @Value("${students.avatar.dir.path}")
     private String avatarDir;
 
@@ -32,6 +36,7 @@ public class AvatarService {
     private final AvatarRepository avatarRepository;
 
     public List<Avatar> getAllAvatars(Integer pageNumber, Integer pageSize){
+        logger.info("Вызов метода вывода аватарок");
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize);
         return avatarRepository.findAll(pageRequest).getContent();
     }
@@ -42,14 +47,17 @@ public class AvatarService {
     }
 
     private String getExtension(String fileName) {
+        logger.info("Вызов метода получения расширения файла");
         return fileName.substring(fileName.lastIndexOf(".") + 1);
     }
 
     public Avatar findAvatar(Long studentId) {
+        logger.info("Вызов метода поиска аватарки");
         return avatarRepository.findByStudentId(studentId).orElse(new Avatar());
     }
 
     public void uploadAvatar(Long studentId, MultipartFile file) throws IOException {
+        logger.info("Вызов метода загрузки аватарки");
         Student student = studentService.findById(studentId);
 
         Path filePath = Path.of(avatarDir, studentId + "." + getExtension(file.getOriginalFilename()));
@@ -75,6 +83,7 @@ public class AvatarService {
     }
 
     private byte[] generatedImagePreview(Path filePath) throws IOException {
+        logger.info("Вызов метода предпросмотра аватарки");
         try (
                 InputStream is = Files.newInputStream(filePath);
                 BufferedInputStream bis = new BufferedInputStream(is, 1024);

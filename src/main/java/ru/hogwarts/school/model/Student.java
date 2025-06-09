@@ -1,5 +1,8 @@
 package ru.hogwarts.school.model;
 
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -16,6 +19,7 @@ public class Student {
 
     @ManyToOne
     @JoinColumn(name = "faculty_id")
+    @JsonBackReference
     private Faculty faculty;
 
     //Геттеры и сеттеры по факультету

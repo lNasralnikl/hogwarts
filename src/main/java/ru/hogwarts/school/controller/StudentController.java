@@ -24,6 +24,9 @@ public class StudentController {
     //Добавление студента
     @PostMapping
     public Student createStudent(@RequestBody Student student){
+        if (student.getFaculty() != null) {
+            student.setFaculty(null);
+        }
         return studentService.addStudent(student);
     }
 
@@ -43,7 +46,7 @@ public class StudentController {
     //Изменение студента
     @PutMapping
     public ResponseEntity<Student> updateStudent(@RequestBody Student student){
-        Student updatedStudent = studentService.addStudent(student);
+        Student updatedStudent = studentService.updateStudent(student);
         return updatedStudent != null
                 ? ResponseEntity.ok(updatedStudent)
                 : ResponseEntity.badRequest().build();
@@ -86,5 +89,25 @@ public class StudentController {
         return studentService.findById(id).getFaculty();
     }
 
+    //SQL запросы
+    //Количество студентов
+    @GetMapping("/count")
+    public Long getAllStudentsQuantity(){
+        return studentService.getAllStudentsQuantity();
+    }
 
+    @GetMapping("/avg-age")
+    public double getAvgAgeOfAllStudents(){
+        return studentService.getAvgAgeOfAllStudents();
+    }
+
+    @GetMapping("/last-five")
+    public List<Student> getLastFiveStudents(){
+        return studentService.getLastFiveStudents();
+    }
+
+    @PutMapping("add-students-for-test")
+    void addStudentsForTest(){
+        studentService.addStudentsForDB();
+    }
 }

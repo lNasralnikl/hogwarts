@@ -1,5 +1,8 @@
 package ru.hogwarts.school.model;
 
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -14,7 +17,9 @@ public class Faculty {
     private Long id;
     private String name, color;
 
-    @OneToMany(mappedBy = "faculty")
+
+    @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL)
+    @JsonManagedReference
     private List<Student> students;
 
     //Геттеры и сеттеры студентов

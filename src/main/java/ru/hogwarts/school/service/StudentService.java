@@ -108,13 +108,20 @@ public class StudentService {
         return studentRepository.getLastFiveStudents();
     }
 
-    //
+    //Вывод студентов с именеами на определенную букву
+    public List<String> getStudentNameStartWith(String letter){
+        logger.info("Вызов метода вывода студентов с буквой " + letter.toUpperCase());
+        return studentRepository.findAll()
+                .parallelStream()
+                .map(Student::getName)
+                .filter(name -> name !=  null && name.toUpperCase().startsWith(letter.toUpperCase()))
+                .sorted()
+                .toList();
+    }
 
     //Заполнение базы
     public void addStudentsForDB() {
-
         studentRepository.deleteByNameStartingWith("Name");
-
         for (int i = 0; i < 10; i++) {
 
             Student student = new Student();

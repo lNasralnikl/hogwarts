@@ -1,5 +1,7 @@
 package ru.hogwarts.school.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +12,14 @@ import ru.hogwarts.school.service.StudentService;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.LongStream;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/student")
 public class StudentController {
+
+    Logger logger = LoggerFactory.getLogger(StudentController.class);
 
     private final StudentService studentService;
 
@@ -28,6 +34,18 @@ public class StudentController {
             student.setFaculty(null);
         }
         return studentService.addStudent(student);
+    }
+
+    //Вывод студентов с именеами на определенную букву
+    @GetMapping("/findAll/letter")
+    public ResponseEntity<List<String>> getStudentNameStartWithLetter(@RequestParam("letter") String letter){
+
+        if (letter.isEmpty() || letter == null){
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<String> names = studentService.getStudentNameStartWith(letter);
+        return ResponseEntity.ok(names);
     }
 
     //Вывод всех студентов
@@ -81,6 +99,40 @@ public class StudentController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(student);
+    }
+
+    //Выполнение шага 4 - сумма значений
+    @GetMapping("/sum")
+    public Boolean getSum(Long limit){
+
+        //Первый способ
+        logger.info("Запуск первого метода подсчета суммы");
+        long startTime1 = System.currentTimeMillis();
+        Long sum1 = LongStream
+                .rangeClosed(1, limit)
+                .parallel()
+                .sum();
+
+        long finishTime1 = System.currentTimeMillis() - startTime1;
+        logger.info("Время работы 1 способа: " + finishTime1);
+
+        //Второй способ
+        logger.info("Запуск второго метода подсчета суммы");
+        long startTime2 = System.currentTimeMillis();
+        Long sum2 = limit/2 + limit*limit/2;
+        long finishTime2 = System.currentTimeMillis() - startTime2;
+        logger.info("Время работы 2 способа: " + finishTime2);
+
+        //Третий способ
+        logger.info("Запуск метода из задания подсчета суммы");
+        long startTime3 = System.currentTimeMillis();
+        long sum = Stream.iterate(1L, a -> a +1) .limit(1_000_000) .reduce(0L, (a, b) -> a + b );
+
+        long finishTime3 = System.currentTimeMillis() - startTime3;
+        logger.info("Время работы заданного способа: " + finishTime3);
+
+        return sum == sum1 && sum2 == sum1;
+
     }
 
     //Получение факультета по id

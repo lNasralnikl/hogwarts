@@ -93,4 +93,15 @@ public class FacultyService {
 
     }
 
+    //Вывод акультета с самым длиным названием
+    public String getFacultyWithMaxName(){
+        logger.info("Вызов метода получения самого длинного названия факультета");
+        return facultyRepository.findAll()
+                .parallelStream()
+                .map(Faculty::getName)
+                .max(Comparator.comparingInt(String::length))
+                .orElseThrow(() -> new IllegalArgumentException("Факультетов нет"));
+
+    }
+
 }

@@ -23,9 +23,11 @@ public class FacultyService {
 
     //Добавление
     public Faculty addFaculty(Faculty faculty){
+
         logger.info("Вызов метода создания факультета " + faculty);
         if (faculty.getId() != null){
             logger.info("Ошибка при создании факультета с указанием ID");
+
             throw new BadRequest("Для добавления нового факультета указать нулевой ID!");
         }
         return facultyRepository.save(faculty);
@@ -33,9 +35,11 @@ public class FacultyService {
 
     //Обновление факультета
     public Faculty updateFaculty(Faculty faculty){
+
         logger.info("Вызов метода обновления факультета " + faculty);
         if(faculty.getId() == null){
             logger.info("Ошибка при обновлении факультета без указания ID");
+
             throw new BadRequest("Для изменения факультета введите не нулевой ID!");
         }
         return facultyRepository.save(faculty);
@@ -43,9 +47,11 @@ public class FacultyService {
 
     //Поиск по id
     public Faculty findById(Long id) {
+
         logger.info("Вызов метода поиска факультета по ID " +id);
         if (!facultyRepository.existsById(id)){
             logger.info("Ошибка при поиске факультета по ID " + id);
+
             throw new BadRequest("Такого факультета нет!");
         }
         return facultyRepository.findById(id).get();
@@ -81,8 +87,10 @@ public class FacultyService {
 
     //Поиск по названию или цвету
     public List<Faculty> findByNameOrColorIgnoreCase(String searchable) {
+
         logger.info("Вызов метода поиска факультета по названию или цвету: " + searchable);
         return facultyRepository.findByNameIgnoreCaseOrColorIgnoreCase(searchable, searchable);
+
     }
 
 }

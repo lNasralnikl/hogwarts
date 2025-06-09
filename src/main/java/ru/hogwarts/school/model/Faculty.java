@@ -1,10 +1,13 @@
 package ru.hogwarts.school.model;
 
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 public class Faculty {
@@ -13,6 +16,7 @@ public class Faculty {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name, color;
+
 
     @OneToMany(mappedBy = "faculty", cascade = CascadeType.ALL)
     @JsonManagedReference

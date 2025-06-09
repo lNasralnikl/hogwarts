@@ -22,9 +22,11 @@ public class StudentService {
 
     //Добавление
     public Student addStudent(Student student) {
+
         logger.info("Вызов метода создания студента " + student);
         if (student.getId() != null) {
             logger.info("Ошибка при создании студента с указанием ID");
+
             throw new BadRequest("Для добавления нового студента укажите нулевой ID!");
         }
         return studentRepository.save(student);
@@ -32,9 +34,11 @@ public class StudentService {
 
     //Обновление
     public Student updateStudent(Student student) {
+
         logger.info("Вызов метода обновления студента " + student);
         if (student.getId() == null) {
             logger.info("Ошибка при обновлении студента без указания ID");
+
             throw new BadRequest("Для обновления студента укажите не нулевой ID!");
         }
         return studentRepository.save(student);
@@ -42,9 +46,11 @@ public class StudentService {
 
     //Поиск по id
     public Student findById(Long id) {
+
         logger.info("Вызов метода поиска студента по ID " + id);
         if (!studentRepository.existsById(id)) {
             logger.info("Ошибка при поиске несуществующего студента c ID " + id);
+
             throw new BadRequest("Такого студента нет!");
         }
         return studentRepository.findById(id).get();
@@ -80,6 +86,7 @@ public class StudentService {
     }
 
     //Поиск в диапазоне возрастов
+
     public List<Student> findByAgeBetween(int minAge, int maxAge) {
         logger.info("Вызов метода поиска студентов в диапазоне возрастов в диапазоне " + minAge + " : " + maxAge);
         return studentRepository.findByAgeBetween(minAge, maxAge);
@@ -118,5 +125,6 @@ public class StudentService {
             }
         }
     }
+
 
 }

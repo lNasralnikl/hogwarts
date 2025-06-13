@@ -262,7 +262,43 @@ public class StudentControllerWebMvcTest {
 
     }
 
+    @Test
+    //Параллельный вывод студентов
+    void parallelPrintNames() throws Exception {
 
+        //Создание студентов
+        when(studentService.getAllStudents()).thenReturn(List.of(
+                new Student(1L, "Name1", 10),
+                new Student(2L, "Name2", 10),
+                new Student(3L, "Name3", 10),
+                new Student(4L, "Name4", 10),
+                new Student(5L, "Name5", 10),
+                new Student(6L, "Name6", 10)
+        ));
+
+        mockMvc.perform(get("/student/print-parallel"))
+                .andExpect(status().isOk());
+
+    }
+
+    @Test
+        //Параллельный вывод студентов
+    void synchronizedPrintNames() throws Exception {
+
+        //Создание студентов
+        when(studentService.getAllStudents()).thenReturn(List.of(
+                new Student(1L, "Name1", 10),
+                new Student(2L, "Name2", 10),
+                new Student(3L, "Name3", 10),
+                new Student(4L, "Name4", 10),
+                new Student(5L, "Name5", 10),
+                new Student(6L, "Name6", 10)
+        ));
+
+        mockMvc.perform(get("/student/print-synchronized"))
+                .andExpect(status().isOk());
+
+    }
 
 }
 

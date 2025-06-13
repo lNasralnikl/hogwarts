@@ -8,6 +8,7 @@ import ru.hogwarts.school.Repositories.StudentRepository;
 import ru.hogwarts.school.model.Student;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class StudentService {
@@ -86,7 +87,6 @@ public class StudentService {
     }
 
     //Поиск в диапазоне возрастов
-
     public List<Student> findByAgeBetween(int minAge, int maxAge) {
         logger.info("Вызов метода поиска студентов в диапазоне возрастов в диапазоне " + minAge + " : " + maxAge);
         return studentRepository.findByAgeBetween(minAge, maxAge);
@@ -133,5 +133,55 @@ public class StudentService {
         }
     }
 
+    //Вывод имен студентов в нескольких потоках
+    public void getSixNamesOfStudents(){
 
+        List<Student> allStudents = getAllStudents();
+
+        //Первые два имени
+        System.out.println(allStudents.get(0).getName());
+        System.out.println(allStudents.get(1).getName());
+
+        //Второй пак имен
+        new Thread(() -> {
+            System.out.println(allStudents.get(2).getName());
+            System.out.println(allStudents.get(3).getName());
+        }).start();
+
+        //Третий пак имен
+        new Thread(() -> {
+            System.out.println(allStudents.get(4).getName());
+            System.out.println(allStudents.get(5).getName());
+        }).start();
+
+    }
+
+    //Печать имен студентов в синхронизированном режиме
+    public synchronized void printSynchronized(Student student){
+        System.out.println(student.getName());
+    }
+
+    //Вывод синхронизированных имен студентов
+    public void printSynchronizedNames(){
+
+        List<Student> students = getAllStudents();
+
+        //Первые два имени
+        printSynchronized(students.get(0));
+        printSynchronized(students.get(1));
+
+        //Второй пак имен
+        new Thread(() -> {
+            printSynchronized(students.get(2));
+            printSynchronized(students.get(3));
+        }).start();
+
+        //Третий пак имен
+        new Thread(() -> {
+            printSynchronized(students.get(4));
+            printSynchronized(students.get(5));
+        }).start();
+
+    }
 }
+

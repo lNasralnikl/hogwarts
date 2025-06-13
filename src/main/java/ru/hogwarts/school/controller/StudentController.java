@@ -162,4 +162,17 @@ public class StudentController {
     void addStudentsForTest(){
         studentService.addStudentsForDB();
     }
+
+    //Эндпоинт GET /students/print-parallel
+    @GetMapping("/print-parallel")
+    public void getParallelNamesOfStudents(){
+        studentService.getSixNamesOfStudents();
+    }
+
+    //Эндпоинт GET /students/print-synchronized
+    @GetMapping("/print-synchronized")
+    public void getSynchronizedlNamesOfStudents(){
+        studentService.printSynchronizedNames();
+    }
+
 }
